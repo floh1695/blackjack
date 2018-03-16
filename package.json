@@ -2,7 +2,8 @@
   "private": true,
   "scripts": {
     "deploy": "surge ./public --domain blackjack.cbayley.surge.sh",
-    "start": "browser-sync start --server 'public' --files 'public'"
+    "start": "browser-sync start --server --startPath public --files public",
+    "sass": "sass --watch public\\src\\scss:public\\out\\css"
   },
   "dependencies": {
     "browser-sync": "^2.23.6",
