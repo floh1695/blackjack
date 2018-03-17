@@ -9,3 +9,4 @@ npm-debug.log
 # vscode config settings
 .vscode
 
+.sass-cache/
