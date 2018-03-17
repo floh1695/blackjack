@@ -33,7 +33,7 @@ Card.randomCard = () => {
 
 class Deck {
   /* If deckCount is 0 or less, a `magic` deck is used.
-   * - A magic deck is a deck that creates cards as needed and doesn't have a discard pile
+   * - A magic deck is a deck that creates cards as needed and doesn't use a discard pile
    */
   constructor(deckCount) {
     this.drawPile = [];
@@ -77,11 +77,36 @@ class Deck {
   }
 }
 
-let deck = null;
-const deckCount = 1;
+class Player {
+  constructor() {
+    this.id = Player.newId();
+    this.hand = [];
+  }
+}
+Player.id = 0;
+Player.newId = () => {
+  return Player.id++;
+};
+
+class Game {
+  constructor(playerCount, deckCount = 0) {
+    this.players = [];
+    this.deck = new Deck(deckCount);
+    this.deck.shuffle();
+    for (let i = 0; i < playerCount; i++) {
+      this.players.push(new Player());
+    }
+  }
+}
+
+let game = null;
+
+const playerCount = 1;
+const deckCount = 0; // aka, magic
+
 const main = () => {
-  deck = new Deck(deckCount);
-  console.log(deck);
+  game = new Game(playerCount, deckCount);
+  console.log(game);
 };
 
 document.addEventListener('DOMContentLoaded', main);
