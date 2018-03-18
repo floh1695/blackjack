@@ -143,6 +143,7 @@ class AbstractPlayer {
     handHtml.innerHTML = '';
     scoreHtml.textContent = `Score: ${this.score()}`;
     this.hand.forEach((card) => {
+      console.log(this, card);
       handHtml.innerHTML += card.html();
     });
   }
@@ -150,7 +151,7 @@ class AbstractPlayer {
 
 class Dealer extends AbstractPlayer {
   constructor() {
-    super('dealerContainer')  ;
+    super('dealerContainer');
     this.showHand = false;
   }
 
@@ -174,6 +175,7 @@ class Player extends AbstractPlayer {
     let id = Player.newId();
     super(`playerContainer${id}`, Player.innerHTML(id));
     this.id = id;
+    this.winCount = 0;
     const decorate = (f) => {
       const inner = (event) => {
         event.preventDefault();
@@ -190,6 +192,16 @@ class Player extends AbstractPlayer {
       .addEventListener('click', decorate((event) => {
         game.stand(this);
       }));
+  }
+
+  won() {
+    this.winCount += 1;
+    this.html.base.style.backgroundColor = 'green';
+  }
+
+  clearHand() {
+    super.clearHand();
+    this.html.base.style.backgroundColor = 'lightgrey';
   }
 }
 Player.id = 0;
@@ -229,7 +241,9 @@ class Game {
     this.dealer.showHand = false;
     this.standing = [];
     this.busted = [];
+    this.winners = [];
     [this.dealer].concat(this.players).forEach((player) => {
+      console.log(player);
       player.clearHand();
       for (let i = 0; i < 2; i++) {
         player.deal(this.deck.draw());
@@ -240,13 +254,29 @@ class Game {
 
   startAi() {
     const dealer = this.dealer;
+    const players = this.players;
     dealer.showHand = true;
+    dealer.updateHtml();
     while (dealer.score() < 18) {
       dealer.deal(this.deck.draw());
+      dealer.updateHtml();
     }
-    if (dealer.score() > 21) {
-      // TODO: Finish game AI
+    if (dealer.score() > 21) { // Dealer bust
+      this.winners = players.filter((player) => {
+        if (player.score() <= 21) {
+          return true;
+        }
+      });
+    } else {
+      this.winners = players.filter((player) => {
+        if (player.score() >= dealer.score() && player.score() <= 21) {
+          return true;
+        }
+      });
     }
+    this.winners.forEach((player) => {
+      player.won();
+    });
   }
 
   isStanding(player) {
@@ -254,7 +284,7 @@ class Game {
   }
 
   allStanding() {
-    return this.players.length === this.standing.length;
+    return this.standing.length >= this.players.length;
   }
 
   hit(player) {
@@ -285,11 +315,18 @@ class Game {
 
 let game = null;
 
-const playerCount = 1;
+const playerCount = 1; // More than 1 player is not working correctly
 const deckCount = 0; // aka, magic deck
 
 const main = () => {
   game = new Game(playerCount, deckCount);
+  const newGameButton = document.querySelector('#newGame');
+  newGameButton.addEventListener('click', (event) => {
+    console.log(game.allStanding());
+    if (game.allStanding()) {
+      game.newGame();
+    }
+  });
   game.newGame();
 };
 
