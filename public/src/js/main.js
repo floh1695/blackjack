@@ -102,7 +102,7 @@ class Game {
 let game = null;
 
 const playerCount = 1;
-const deckCount = 0; // aka, magic
+const deckCount = 0; // aka, magic deck
 
 const main = () => {
   game = new Game(playerCount, deckCount);
