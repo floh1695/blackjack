@@ -9,17 +9,28 @@
 </head>
 
 <body class="body">
+
   <header class="header">
     <h1 class="header-title">Blackjack</h1>
   </header>
+
+  <section id="dealerContainer" class="game-container">
+    <header class="player-header">
+      <h2 class="dealer">Dealer</h2>
+    </header>
+    <h3 class="score">Score: ?</h3>
+    <ul class="player-hand">
+    </ul>
+  </section>
+
   <section id="gameContainer" class="game-container">
     <!-- 
       <section class="player-box">
         <header class="player-header">
           <h2 class="player-name">Player ${id}</h2>
         </header>
+        <h3 class="Score">Score: ${score}</h3>
         <ul class="player-hand">
-          <h3 class="Score">Score: ${score}</h3>
           <h4 class="playing-card">${face} of ${suit}</h4>
           <h4 class="playing-card">${face} of ${suit}</h4>
         </ul>
